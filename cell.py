@@ -8,6 +8,7 @@ class Cell:
         self.cell = cell
         self.game_surface = surface
         self.advance()
+        self.neighbours = []
 
     def calculate_next_state(self):
         live_count = 0
