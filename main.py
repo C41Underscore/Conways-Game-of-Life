@@ -100,7 +100,10 @@ def generate_cell_array(game_surface):
 
 def main():
     pg.display.init()
-    display_window = pg.display.set_mode(size=(SIZE_OF_WINDOW, SIZE_OF_WINDOW), display=pg.NOFRAME)
+    display_window = pg.display.set_mode(
+        size=(SIZE_OF_WINDOW, SIZE_OF_WINDOW),
+        display=pg.NOFRAME
+    )
     game_surface = pg.display.get_surface()
     cells = generate_cell_array(game_surface)
     associate_neighbours(cells)
