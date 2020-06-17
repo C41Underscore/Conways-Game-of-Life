@@ -17,12 +17,12 @@ class Cell:
                 live_count += 1
         if live_count == 3 and not self.state:
             self.next_state = True
-        elif live_count > 3 and self.state:
-            self.next_state = False
-        elif live_count < 2 and self.state:
-            self.next_state = False
         else:
-            self.next_state = self.state
+            if self.state:
+                if not 1 < live_count < 4:
+                    self.next_state = False
+            else:
+                self.next_state = self.state
 
     def set_neighbours(self, neighbours):
         self.neighbours = neighbours
