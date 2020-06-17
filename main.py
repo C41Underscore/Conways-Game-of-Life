@@ -1,7 +1,6 @@
 import pygame as pg
 import time
 import random
-from sys import exit
 
 from cell import Cell
 
