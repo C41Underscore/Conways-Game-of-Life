@@ -7,13 +7,14 @@ from cell import Cell
 # TODO: GET USER INPUT WORKING TO FOR USER INITIALISATION
 
 SIZE_OF_CELL = 20
-SIZE_OF_WINDOW = 1000
+SIZE_OF_WINDOW = 1200
 NUMBER_OF_CELLS_PER_ROW = int(SIZE_OF_WINDOW/SIZE_OF_CELL)
-NUMBER_OF_ITERATIONS = 500
+NUMBER_OF_ITERATIONS = 300
+K = 3
 
 
 def run_game(cells):
-    for i in range(0, NUMBER_OF_ITERATIONS):
+    for _ in range(0, NUMBER_OF_ITERATIONS):
         time.sleep(0.0001)
         for i in range(0, NUMBER_OF_CELLS_PER_ROW):
             for j in range(0, NUMBER_OF_CELLS_PER_ROW):
@@ -21,64 +22,38 @@ def run_game(cells):
         for i in range(0, NUMBER_OF_CELLS_PER_ROW):
             for j in range(0, NUMBER_OF_CELLS_PER_ROW):
                 cells[i][j].advance()
-    time.sleep(15)
+    time.sleep(5)
 
 
 def associate_neighbours(cells):
     for i in range(0, NUMBER_OF_CELLS_PER_ROW):
         for j in range(0, NUMBER_OF_CELLS_PER_ROW):
             next_neighbours = list()
-            if i == 0 == j:
-                next_neighbours.append(cells[i+1][j])
-                next_neighbours.append(cells[i][j+1])
-                next_neighbours.append(cells[i+1][i+1])
-            elif i == 0 and j == NUMBER_OF_CELLS_PER_ROW-1:
-                next_neighbours.append(cells[i][j-1])
-                next_neighbours.append(cells[i+1][j-1])
-                next_neighbours.append(cells[i+1][j])
-            elif i == NUMBER_OF_CELLS_PER_ROW-1 and j == 0:
-                next_neighbours.append(cells[i-1][j])
-                next_neighbours.append(cells[i-1][j+1])
-                next_neighbours.append(cells[i][j+1])
-            elif i == NUMBER_OF_CELLS_PER_ROW-1 == j:
-                next_neighbours.append(cells[i-1][j])
-                next_neighbours.append(cells[j-1][j-1])
-                next_neighbours.append(cells[i][j-1])
-            else:
-                if i == 0:
-                    next_neighbours.append(cells[i][j-1])
-                    next_neighbours.append(cells[i-1][j+1])
-                    next_neighbours.append(cells[i+1][j])
-                    next_neighbours.append(cells[i+1][j+1])
-                    next_neighbours.append(cells[i][j+1])
-                elif j == 0:
-                    next_neighbours.append(cells[i-1][j])
-                    next_neighbours.append(cells[i-1][j+1])
-                    next_neighbours.append(cells[i][j+1])
-                    next_neighbours.append(cells[i+1][j+1])
-                    next_neighbours.append(cells[i+1][j])
-                elif i == NUMBER_OF_CELLS_PER_ROW-1:
-                    next_neighbours.append(cells[i-1][j-1])
-                    next_neighbours.append(cells[i-1][j])
-                    next_neighbours.append(cells[i-1][j+1])
-                    next_neighbours.append(cells[i][j-1])
-                    next_neighbours.append(cells[i][j+1])
-                elif j == NUMBER_OF_CELLS_PER_ROW-1:
-                    next_neighbours.append(cells[i-1][j])
-                    next_neighbours.append(cells[i-1][j-1])
-                    next_neighbours.append(cells[i][j-1])
-                    next_neighbours.append(cells[i+1][j-1])
-                    next_neighbours.append(cells[i+1][j])
-                else:
-                    next_neighbours.append(cells[i-1][j-1])
-                    next_neighbours.append(cells[i-1][j])
-                    next_neighbours.append(cells[i-1][j+1])
-                    next_neighbours.append(cells[i][j-1])
-                    next_neighbours.append(cells[i][j+1])
-                    next_neighbours.append(cells[i+1][j-1])
-                    next_neighbours.append(cells[i+1][j])
-                    next_neighbours.append(cells[i+1][j+1])
-            cells[i][j].set_neighbours(next_neighbours.copy())
+            # left
+            next_neighbours.append(cells[i][j-1 if j > 0 else NUMBER_OF_CELLS_PER_ROW-1])
+            # right
+            next_neighbours.append(cells[i][j+1 if j < NUMBER_OF_CELLS_PER_ROW-1 else 0])
+            # above
+            next_neighbours.append(cells[i-1 if i > 0 else NUMBER_OF_CELLS_PER_ROW-1][j])
+            # below
+            next_neighbours.append(cells[i+1 if i < NUMBER_OF_CELLS_PER_ROW-1 else 0][j])
+            # left-top
+            next_neighbours.append(
+                cells[i-1 if i > 0 else NUMBER_OF_CELLS_PER_ROW-1][j-1 if j > 0 else NUMBER_OF_CELLS_PER_ROW-1]
+            )
+            # right-top
+            next_neighbours.append(
+                cells[i-1 if i > 0 else NUMBER_OF_CELLS_PER_ROW-1][j+1 if j < NUMBER_OF_CELLS_PER_ROW-1 else 0]
+            )
+            # left-bottom
+            next_neighbours.append(
+                cells[i+1 if i < NUMBER_OF_CELLS_PER_ROW-1 else 0][j-1 if j > 0 else NUMBER_OF_CELLS_PER_ROW-1]
+            )
+            # right-bottom
+            next_neighbours.append(
+                cells[i+1 if i < NUMBER_OF_CELLS_PER_ROW-1 else 0][j+1 if j < NUMBER_OF_CELLS_PER_ROW-1 else 0]
+            )
+            cells[i][j].set_neighbours(next_neighbours)
 
 
 def generate_cell_array(game_surface):
@@ -93,7 +68,8 @@ def generate_cell_array(game_surface):
                     SIZE_OF_CELL,
                     SIZE_OF_CELL
                 ),
-                game_surface
+                game_surface,
+                K
             )
     return cells
 

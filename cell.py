@@ -2,20 +2,21 @@ import pygame as pg
 
 
 class Cell:
-    def __init__(self, initial_state, cell, surface):
+    def __init__(self, initial_state, cell, surface, k):
         self.state = initial_state
         self.next_state = initial_state
         self.cell = cell
         self.game_surface = surface
         self.advance()
         self.neighbours = []
+        self.k = k
 
     def calculate_next_state(self):
         live_count = 0
         for i in self.neighbours:
             if i.state:
                 live_count += 1
-        if live_count == 3 and not self.state:
+        if live_count == self.k and not self.state:
             self.next_state = True
         else:
             if self.state:
